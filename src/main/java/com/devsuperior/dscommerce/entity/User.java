@@ -14,10 +14,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String phone;
+
     private LocalDate birthDate;
+
     private String password;
 
     @OneToMany(mappedBy = "client")
@@ -25,7 +31,9 @@ public class User {
 
     public User() {
     }
-
+    public Long getId() {
+        return id;
+    }
     public User(String name, String email, String phone, LocalDate birthDate, String password, List<Order> orders) {
         this.name = name;
         this.email = email;
