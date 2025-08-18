@@ -36,7 +36,7 @@ public class ControllerExceptionHandler {
         ValidationError err = new ValidationError(
                 Instant.now(),
                 status.value(),
-                e.getMessage(),
+                "Dados inválidos",
                 request.getRequestURI()
         );
 
