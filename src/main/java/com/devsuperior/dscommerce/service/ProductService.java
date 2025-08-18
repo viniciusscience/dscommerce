@@ -46,8 +46,9 @@ public class ProductService implements BaseService<ProductDTO, ProductDTO> {
     }
 
     @Override
-    public ProductDTO delete(ProductDTO entity) {
-        return null;
+    @Transactional
+    public void delete(Long id) {
+        productRepository.deleteById(id);
     }
 
     @Override

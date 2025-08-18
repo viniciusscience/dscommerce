@@ -9,7 +9,7 @@ public interface BaseService<T, R> {
 
     R update(Long id, T entity);
 
-    R delete(T entity);
+    void delete(Long id);
 
     R findById(Long id);
 
