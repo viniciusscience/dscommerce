@@ -3,6 +3,7 @@ package com.devsuperior.dscommerce.service;
 import com.devsuperior.dscommerce.dto.ProductDTO;
 import com.devsuperior.dscommerce.entity.Product;
 import com.devsuperior.dscommerce.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +28,21 @@ public class ProductService implements BaseService<ProductDTO, ProductDTO> {
         return modelMapper.map(produtoEntityOut, ProductDTO.class);
     }
 
+
     @Override
-    public ProductDTO update(ProductDTO entity) {
-        return null;
+    @Transactional
+    public ProductDTO update(Long id, ProductDTO dto) {
+        var produtoEntityIn = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
+
+        produtoEntityIn.setDescription(dto.getDescription());
+        produtoEntityIn.setPrice(dto.getPrice());
+        produtoEntityIn.setName(dto.getName());
+        produtoEntityIn.setImgUrl(dto.getImgUrl());
+
+        var produtoEntityOut = productRepository.save(produtoEntityIn);
+
+        return modelMapper.map(produtoEntityOut, ProductDTO.class);
     }
 
     @Override

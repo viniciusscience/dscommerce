@@ -41,4 +41,10 @@ public class ProductController {
     public ResponseEntity<Page<ProductDTO>> findByAll(Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(pageable));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> atualizar(@PathVariable Long id, @RequestBody ProductDTO dto) {
+        dto = productService.update(id, dto);
+        return ResponseEntity.ok(productService.create(dto));
+    }
 }
