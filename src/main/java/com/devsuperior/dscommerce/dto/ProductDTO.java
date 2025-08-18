@@ -23,16 +23,6 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.url = product.getUrl();
-        this.price = product.getPrice();
-        this.imgUrl = product.getImgUrl();
-
-    }
-
     public Long getId() {
         return id;
     }
