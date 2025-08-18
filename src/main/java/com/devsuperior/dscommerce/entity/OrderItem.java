@@ -10,7 +10,9 @@ public class OrderItem {
 
     @EmbeddedId
     private OrderItemPK id = new OrderItemPK();
+
     private Integer quantity;
+
     private Double price;
 
     public OrderItem(Order order, Product product, Integer quantity, Double price) {

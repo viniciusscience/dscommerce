@@ -31,9 +31,7 @@ public class User {
 
     public User() {
     }
-    public Long getId() {
-        return id;
-    }
+
     public User(String name, String email, String phone, LocalDate birthDate, String password, List<Order> orders) {
         this.name = name;
         this.email = email;
@@ -84,6 +82,14 @@ public class User {
     }
 
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,13 +101,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(name, email, phone, birthDate, password);
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

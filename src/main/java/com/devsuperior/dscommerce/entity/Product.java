@@ -13,11 +13,16 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     @Column(columnDefinition = "TEXT")
     private String description;
+
     private String url;
+
     private Double price;
+
     private String imgUrl;
 
     @OneToMany(mappedBy = "id.product")
@@ -30,16 +35,9 @@ public class Product {
     private Set<Category> categories = new HashSet<Category>();
 
 
-    public Set<OrderItem> getItems() {
-        return items;
-    }
-
     public Product() {
     }
 
-    public Set<Category> getCategories() {
-        return categories;
-    }
     public Product(Long id, String name, String description, String url, Double price, String imgUrl,Set<OrderItem> items) {
         this.id = id;
         this.name = name;
@@ -99,5 +97,12 @@ public class Product {
     }
     public List<Order> getOrders() {
         return items.stream().map(OrderItem::getOrder).toList();
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+    public Set<Category> getCategories() {
+        return categories;
     }
 }
