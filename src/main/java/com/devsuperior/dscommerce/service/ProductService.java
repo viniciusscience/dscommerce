@@ -9,10 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
-public class ProductService implements BaseService<Product, ProductDTO> {
+public class ProductService implements BaseService<ProductDTO, ProductDTO> {
 
     private final ProductRepository productRepository;
     private final static ModelMapper modelMapper = new ModelMapper();
@@ -20,25 +18,29 @@ public class ProductService implements BaseService<Product, ProductDTO> {
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
+
     @Override
-    public ProductDTO create(Product entity) {
+    @Transactional
+    public ProductDTO create(ProductDTO dto) {
+        final var produtoEntityIn = modelMapper.map(dto, Product.class);
+        final var produtoEntityOut = productRepository.save(produtoEntityIn);
+        return modelMapper.map(produtoEntityOut, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO update(ProductDTO entity) {
         return null;
     }
 
     @Override
-    public ProductDTO update(Product entity) {
-        return null;
-    }
-
-    @Override
-    public ProductDTO delete(Product entity) {
+    public ProductDTO delete(ProductDTO entity) {
         return null;
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-       final var produtoEntity=  productRepository
+        final var produtoEntity = productRepository
                 .findById(id).get();
 
         return modelMapper.map(produtoEntity, ProductDTO.class);
@@ -46,9 +48,9 @@ public class ProductService implements BaseService<Product, ProductDTO> {
 
     @Override
     public Page<ProductDTO> findAll(Pageable pageable) {
-      return  productRepository
+        return productRepository
                 .findAll(pageable)
-                .map(entity-> modelMapper.map(entity, ProductDTO.class));
+                .map(entity -> modelMapper.map(entity, ProductDTO.class));
 
     }
 }

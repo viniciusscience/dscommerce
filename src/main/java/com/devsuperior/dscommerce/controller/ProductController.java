@@ -1,13 +1,11 @@
 package com.devsuperior.dscommerce.controller;
 
 import com.devsuperior.dscommerce.dto.ProductDTO;
-import com.devsuperior.dscommerce.repository.ProductRepository;
 import com.devsuperior.dscommerce.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -19,12 +17,18 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/{id}")
-    public ProductDTO findById(@PathVariable Long id) {
-        return productService.findById(id);
+    @PostMapping
+    public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO dto) {
+        return ResponseEntity.ok(productService.create(dto));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
+    }
+
     @GetMapping
-    public Page<ProductDTO> findByAll(Pageable pageable) {
-        return productService.findAll(pageable);
+    public ResponseEntity<Page<ProductDTO>> findByAll(Pageable pageable) {
+        return ResponseEntity.ok(productService.findAll(pageable));
     }
 }
