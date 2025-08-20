@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,16 +72,15 @@ public class AuthorizationServerConfig {
 	@Order(2)
 	public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
 
-		http.securityMatcher("/oauth2/**", "/.well-known/**").with(OAuth2AuthorizationServerConfigurer.authorizationServer(), Customizer.withDefaults());
+		http.securityMatcher("/oauth2/**", "/.well-known/**")
+				.with(OAuth2AuthorizationServerConfigurer.authorizationServer(), Customizer.withDefaults());
 
-		// @formatter:off
 		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 			.tokenEndpoint(tokenEndpoint -> tokenEndpoint
 				.accessTokenRequestConverter(new CustomPasswordAuthenticationConverter())
 				.authenticationProvider(new CustomPasswordAuthenticationProvider(authorizationService(), tokenGenerator(), userDetailsService, passwordEncoder())));
 
 		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
-		// @formatter:on
 
 		return http.build();
 	}
@@ -102,7 +102,6 @@ public class AuthorizationServerConfig {
 
 	@Bean
 	public RegisteredClientRepository registeredClientRepository() {
-		// @formatter:off
 		RegisteredClient registeredClient = RegisteredClient
 			.withId(UUID.randomUUID().toString())
 			.clientId(clientId)
@@ -113,19 +112,16 @@ public class AuthorizationServerConfig {
 			.tokenSettings(tokenSettings())
 			.clientSettings(clientSettings())
 			.build();
-		// @formatter:on
 
 		return new InMemoryRegisteredClientRepository(registeredClient);
 	}
 
 	@Bean
 	public TokenSettings tokenSettings() {
-		// @formatter:off
 		return TokenSettings.builder()
 			.accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
 			.accessTokenTimeToLive(Duration.ofSeconds(jwtDurationSeconds))
 			.build();
-		// @formatter:on
 	}
 
 	@Bean
@@ -152,13 +148,12 @@ public class AuthorizationServerConfig {
 		return context -> {
 			OAuth2ClientAuthenticationToken principal = context.getPrincipal();
 			CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
-			List<String> authorities = user.getAuthorities().stream().map(x -> x.getAuthority()).toList();
+			List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 			if (context.getTokenType().getValue().equals("access_token")) {
-				// @formatter:off
 				context.getClaims()
+					.claim("nome","vinicius")
 					.claim("authorities", authorities)
 					.claim("username", user.getUsername());
-				// @formatter:on
 			}
 		};
 	}
