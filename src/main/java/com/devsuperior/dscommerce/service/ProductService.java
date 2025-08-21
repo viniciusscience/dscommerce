@@ -1,8 +1,10 @@
 package com.devsuperior.dscommerce.service;
 
 import com.devsuperior.dscommerce.dto.ProductDTO;
+import com.devsuperior.dscommerce.entity.Category;
 import com.devsuperior.dscommerce.entity.Product;
 import com.devsuperior.dscommerce.execptions.ResourceNotFoundException;
+import com.devsuperior.dscommerce.repository.CategoryRepository;
 import com.devsuperior.dscommerce.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -16,17 +18,27 @@ public class ProductService implements BaseService<ProductDTO, ProductDTO> {
 
     private final ProductRepository productRepository;
     private final static ModelMapper modelMapper = new ModelMapper();
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     @Transactional
     public ProductDTO create(ProductDTO dto) {
         final var produtoEntityIn = modelMapper.map(dto, Product.class);
+
+        for (var c : dto.getCategories()) {
+            final var categoriaReference = categoryRepository.getReferenceById(c.getId());
+            produtoEntityIn.getCategories().add(categoriaReference);
+
+        }
         final var produtoEntityOut = productRepository.save(produtoEntityIn);
-        return modelMapper.map(produtoEntityOut, ProductDTO.class);
+
+        return  new ProductDTO(produtoEntityOut);
     }
 
 
@@ -59,7 +71,7 @@ public class ProductService implements BaseService<ProductDTO, ProductDTO> {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
-        return modelMapper.map(produtoEntity, ProductDTO.class);
+        return new ProductDTO(produtoEntity);
     }
 
     @Override

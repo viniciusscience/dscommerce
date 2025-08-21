@@ -48,6 +48,13 @@ public class Product {
         this.items = items;
     }
 
+    public void setCategories(Set<Category> categories) {
+        categories.clear();
+        this.categories = categories;
+    }
+
+
+
     public void setId(Long id) {
         this.id = id;
     }
