@@ -46,6 +46,8 @@ public class User implements UserDetails {
         this.orders = orders;
     }
 
+
+
     public Long getId() {
         return id;
     }
@@ -87,6 +89,7 @@ public class User implements UserDetails {
         }
         return false;
     }
+
     public String getName() {
         return name;
     }

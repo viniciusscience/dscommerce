@@ -2,7 +2,7 @@ package com.devsuperior.dscommerce.service;
 
 import com.devsuperior.dscommerce.dto.OrderDTO;
 import com.devsuperior.dscommerce.entity.*;
-import com.devsuperior.dscommerce.execptions.ResourceNotFoundException;
+import com.devsuperior.dscommerce.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscommerce.repository.OrderItemRepository;
 import com.devsuperior.dscommerce.repository.OrderRepository;
 import com.devsuperior.dscommerce.repository.ProductRepository;
@@ -19,12 +19,14 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserService userService;
     private final OrderItemRepository orderItemRepository;
+    private final AuthService authService;
 
-    public OrderService(OrderRepository orderRepository, UserService userService, ProductRepository productRepository, OrderItemRepository orderItemRepository) {
+    public OrderService(OrderRepository orderRepository, UserService userService, ProductRepository productRepository, OrderItemRepository orderItemRepository,AuthService authService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItemRepository;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
@@ -32,7 +34,7 @@ public class OrderService {
         final var orderEntity = orderRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
-
+        authService.validateSelfOrAdmin(orderEntity.getClient().getId());
         return new OrderDTO(orderEntity);
     }
 

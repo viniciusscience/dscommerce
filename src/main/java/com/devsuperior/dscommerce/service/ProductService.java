@@ -1,9 +1,8 @@
 package com.devsuperior.dscommerce.service;
 
 import com.devsuperior.dscommerce.dto.ProductDTO;
-import com.devsuperior.dscommerce.entity.Category;
 import com.devsuperior.dscommerce.entity.Product;
-import com.devsuperior.dscommerce.execptions.ResourceNotFoundException;
+import com.devsuperior.dscommerce.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscommerce.repository.CategoryRepository;
 import com.devsuperior.dscommerce.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
