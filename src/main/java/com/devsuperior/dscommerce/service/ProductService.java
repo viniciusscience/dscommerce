@@ -79,6 +79,5 @@ public class ProductService implements BaseService<ProductDTO, ProductDTO> {
         return productRepository
                 .findAll(pageable)
                 .map(entity -> modelMapper.map(entity, ProductDTO.class));
-
     }
 }

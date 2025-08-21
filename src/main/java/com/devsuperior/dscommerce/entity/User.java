@@ -46,6 +46,9 @@ public class User implements UserDetails {
         this.orders = orders;
     }
 
+    public Long getId() {
+        return id;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
